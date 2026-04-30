@@ -216,11 +216,13 @@
       targetY = e.clientY;
     }, { passive: true });
 
+    /* Cache half-size once — spotlight is fixed at 700px */
+    const spHalf = spotlight.offsetWidth / 2;
+
     (function animateSpotlight() {
       spX += (targetX - spX) * 0.08;
       spY += (targetY - spY) * 0.08;
-      /* Use transform for GPU-accelerated compositing */
-      spotlight.style.transform = `translate(calc(${spX}px - 50%), calc(${spY}px - 50%))`;
+      spotlight.style.transform = `translate(${spX - spHalf}px, ${spY - spHalf}px)`;
       requestAnimationFrame(animateSpotlight);
     })();
   }
