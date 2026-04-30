@@ -135,7 +135,7 @@ a   { text-decoration: none; color: inherit; }
 .hero-bg {
   position: absolute;
   inset: -10%;
-  background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1800&q=80') center/cover no-repeat;
+  background: url('https://github.com/user-attachments/assets/42b3a807-524a-4b3d-b85b-94a46541dc7f') center/cover no-repeat;
   will-change: transform;
   transition: transform 0.1s linear;
 }
