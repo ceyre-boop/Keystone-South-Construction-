@@ -1168,9 +1168,8 @@ html { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
   background: radial-gradient(circle, rgba(232,103,26,0.055) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
-  left: 0; top: 0;
-  transform: translate(-50%, -50%);
-  will-change: left, top;
+  top: 0; left: 0;
+  will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) { .cursor-spotlight { display: none; } }
 

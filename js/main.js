@@ -219,8 +219,8 @@
     (function animateSpotlight() {
       spX += (targetX - spX) * 0.08;
       spY += (targetY - spY) * 0.08;
-      spotlight.style.left = spX + 'px';
-      spotlight.style.top  = spY + 'px';
+      /* Use transform for GPU-accelerated compositing */
+      spotlight.style.transform = `translate(calc(${spX}px - 50%), calc(${spY}px - 50%))`;
       requestAnimationFrame(animateSpotlight);
     })();
   }
@@ -375,11 +375,13 @@
     });
   }, { threshold: 0.15 });
 
+  /* Cache viewport height once to avoid repeated layout reads in loop */
+  const vph = window.innerHeight;
   document.querySelectorAll('.gallery-img-wrap').forEach(wrap => {
     const img = wrap.querySelector('img');
     const rect = wrap.getBoundingClientRect();
     /* Only apply initial zoom to images starting below viewport */
-    if (img && rect.top >= window.innerHeight) {
+    if (img && rect.top >= vph) {
       img.style.transform = 'scale(1.08)';
     } else {
       wrap.classList.add('flown-in');
@@ -418,26 +420,34 @@
     lb.setAttribute('role', 'dialog');
     lb.setAttribute('aria-modal', 'true');
     lb.setAttribute('aria-label', 'Image preview');
-    lb.innerHTML = `
-      <img src="${imgEl.src}" alt="${imgEl.alt}" />
-      <button class="lightbox-close" aria-label="Close preview" type="button">&#x2715;</button>
-    `;
+
+    /* Build DOM safely — no innerHTML with user-controlled values */
+    const lbImg = document.createElement('img');
+    lbImg.src = imgEl.src;
+    lbImg.alt = imgEl.alt;
+
+    const lbClose = document.createElement('button');
+    lbClose.className = 'lightbox-close';
+    lbClose.setAttribute('aria-label', 'Close preview');
+    lbClose.setAttribute('type', 'button');
+    lbClose.textContent = '\u2715';
+
+    lb.appendChild(lbImg);
+    lb.appendChild(lbClose);
     document.body.appendChild(lb);
+
     /* Animate in */
     requestAnimationFrame(() => lb.classList.add('visible'));
 
     const close = () => {
       lb.classList.remove('visible');
+      document.removeEventListener('keydown', onKey);
       setTimeout(() => lb.remove(), 380);
     };
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+
     lb.addEventListener('click', close);
-    lb.querySelector('.lightbox-close').addEventListener('click', (e) => {
-      e.stopPropagation();
-      close();
-    });
-    const onKey = (e) => {
-      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); }
-    };
+    lbClose.addEventListener('click', (e) => { e.stopPropagation(); close(); });
     document.addEventListener('keydown', onKey);
   }
 
