@@ -306,15 +306,16 @@ a   { text-decoration: none; color: inherit; }
   max-width: 620px;
 }
 
-/* ── Scroll reveal ──────────────────────────────────────── */
+/* ── Scroll reveal (cinematic: fade + rise + subtle scale) ── */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(36px) scale(0.985);
+  transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
@@ -427,6 +428,13 @@ a   { text-decoration: none; color: inherit; }
   transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .gallery-item:hover .gallery-img-wrap { transform: scale(1.05); }
+
+/* Room Fly-In: imgs start zoomed, transition to normal on scroll */
+.gallery-img-wrap img {
+  transition: transform 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.gallery-img-wrap.flown-in img { transform: scale(1.0); }
+.gallery-item:hover .gallery-img-wrap img { transform: scale(1.06); }
 
 .gallery-caption {
   position: absolute;
@@ -930,3 +938,326 @@ a   { text-decoration: none; color: inherit; }
   text-align: center;
   margin-top: 8px;
 }
+
+/* =========================================================
+   PREMIUM FEATURES
+   ========================================================= */
+
+/* ── Feature 1/13: Scroll-snap (proximity — feels guided) ── */
+html { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
+#hero, #why, #gallery, #before-after, #showcase,
+#services, #reviews, #service-area, #contact {
+  scroll-snap-align: start;
+}
+
+/* ── Feature 2: Multi-layer parallax — hero noise layer ──── */
+.hero-particles {
+  position: absolute;
+  inset: -10%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.038;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ── Feature 3: Before / After Slider ───────────────────── */
+#before-after {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.ba-intro { text-align: center; padding-bottom: 48px; }
+.ba-intro .section-sub { margin: 0 auto; }
+
+.ba-slider-wrap {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 45vw, 560px);
+  overflow: hidden;
+  cursor: col-resize;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.ba-after {
+  position: absolute;
+  inset: 0;
+}
+.ba-after img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.ba-before {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 50%;
+  overflow: hidden;
+  z-index: 2;
+}
+.ba-before img {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.ba-label {
+  position: absolute;
+  bottom: 20px;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 980px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 4;
+}
+.ba-before .ba-label { left: 20px; }
+.ba-after  .ba-label { right: 20px; }
+
+.ba-handle {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 3px;
+  background: var(--white);
+  z-index: 3;
+  transform: translateX(-50%);
+  cursor: col-resize;
+  box-shadow: 0 0 24px rgba(0,0,0,0.5);
+}
+.ba-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 4px 28px rgba(0,0,0,0.45);
+}
+.ba-handle::after {
+  content: '◀ ▶';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  letter-spacing: -3px;
+  color: var(--black);
+  z-index: 1;
+  line-height: 1;
+}
+
+/* ── Feature 4: Blueprint Mode ───────────────────────────── */
+.blueprint-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(64,156,255,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(64,156,255,0.2) 1px, transparent 1px);
+  background-size: 32px 32px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+.blueprint-overlay.active { opacity: 1; }
+
+.blueprint-img-filter {
+  transition: filter 0.55s ease;
+}
+.blueprint-img-filter.blueprint-on {
+  filter: sepia(1) hue-rotate(190deg) brightness(0.5) contrast(1.8) saturate(3);
+}
+
+/* ── Feature 6: Scroll-Synced Showcase ──────────────────── */
+#showcase {
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.showcase-intro { text-align: center; padding-bottom: 60px; }
+.showcase-intro .section-sub { margin: 0 auto; }
+
+.showcase-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+.showcase-step {
+  padding: clamp(36px, 5vw, 60px) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  opacity: 0.28;
+  transition: opacity 0.5s ease;
+}
+.showcase-step:last-child { border-bottom: none; }
+.showcase-step.active { opacity: 1; }
+.showcase-step .section-label { margin-bottom: 10px; }
+.showcase-step h3 {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.showcase-step p {
+  font-size: clamp(14px, 1.6vw, 17px);
+  color: var(--gray-mid);
+  line-height: 1.65;
+  max-width: 400px;
+}
+.showcase-step-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--orange);
+  transition: gap 0.2s;
+}
+.showcase-step.active .showcase-step-cta:hover { gap: 10px; }
+
+.showcase-visual {
+  position: sticky;
+  top: 90px;
+  height: clamp(320px, 50vw, 580px);
+  border-radius: 24px;
+  overflow: hidden;
+}
+.showcase-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.showcase-img.active { opacity: 1; transform: scale(1); }
+
+@media (max-width: 900px) {
+  .showcase-container { grid-template-columns: 1fr; }
+  .showcase-visual {
+    position: relative;
+    top: auto;
+    height: clamp(220px, 55vw, 400px);
+    margin-bottom: 40px;
+  }
+  .showcase-step { opacity: 1; }
+}
+
+/* ── Feature 7: Ambient cursor spotlight ────────────────── */
+.cursor-spotlight {
+  position: fixed;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,103,26,0.055) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  left: 0; top: 0;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+}
+@media (prefers-reduced-motion: reduce) { .cursor-spotlight { display: none; } }
+
+/* ── Feature 8: Sticky bar hover underline ──────────────── */
+.sticky-phone {
+  position: relative;
+}
+.sticky-phone::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--orange);
+  transition: width 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.sticky-phone:hover::after { width: 100%; }
+
+/* ── Feature 9: Stats counter underline draw ────────────── */
+.stat-underline {
+  display: block;
+  width: 0;
+  height: 3px;
+  background: var(--orange);
+  border-radius: 3px;
+  margin-top: 6px;
+  transition: width 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.stat-underline.drawn { width: 40px; }
+
+/* ── Feature 12: Orange Energy Line under section titles ─── */
+.section-line {
+  display: block;
+  height: 3px;
+  background: var(--orange);
+  border-radius: 3px;
+  width: 0;
+  transition: width 0.8s cubic-bezier(0.25,0.46,0.45,0.94) 0.4s;
+  margin-top: 18px;
+}
+.section-line.drawn { width: 56px; }
+
+/* ── Feature 15: Mobile image lightbox ──────────────────── */
+.mobile-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  cursor: zoom-out;
+}
+.mobile-lightbox.visible { opacity: 1; }
+.mobile-lightbox img {
+  max-width: 100%;
+  max-height: 85vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  cursor: default;
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  color: var(--white);
+  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  line-height: 1;
+  font-family: var(--font);
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.28); }
+
