@@ -934,6 +934,9 @@ a   { text-decoration: none; color: inherit; }
 /* ── Utility ────────────────────────────────────────────── */
 .text-center { text-align: center; }
 .text-center .section-sub { margin: 0 auto; }
+.text-center .section-line,
+.ba-intro .section-line,
+.showcase-intro .section-line { margin-left: auto; margin-right: auto; }
 
 /* Form success message */
 .form-success {
