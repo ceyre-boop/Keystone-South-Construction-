@@ -945,12 +945,94 @@ a   { text-decoration: none; color: inherit; }
 
 /* ── Feature 1/13: Scroll-snap (proximity — feels guided) ── */
 html { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
-#hero, #why, #gallery, #before-after, #showcase,
+#hero, #about, #why, #gallery, #before-after, #showcase,
 #services, #reviews, #service-area, #contact {
   scroll-snap-align: start;
 }
 
-/* ── Feature 2: Multi-layer parallax — hero noise layer ──── */
+/* ── Hero contact alt line ─────────────────────────────── */
+.hero-contact-alt {
+  font-size: clamp(12px, 1.4vw, 14px);
+  color: rgba(255,255,255,0.55);
+  margin-top: 16px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s 1.5s forwards;
+}
+.hero-contact-alt a {
+  color: rgba(255,255,255,0.75);
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  transition: color 0.2s, border-color 0.2s;
+}
+.hero-contact-alt a:hover {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+
+/* ── About ──────────────────────────────────────────────── */
+#about {
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 100px);
+  align-items: center;
+}
+
+.about-img {
+  border-radius: 24px;
+  overflow: hidden;
+  height: clamp(320px, 45vw, 560px);
+}
+
+.about-text .section-sub { max-width: 100%; }
+
+.about-credentials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.about-cred {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s;
+}
+.about-cred:hover { border-color: rgba(232,103,26,0.3); }
+
+.about-cred-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+.about-cred-detail {
+  font-size: 13px;
+  color: var(--gray-mid);
+}
+
+.about-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .about-img { height: clamp(240px, 55vw, 400px); }
+}
+@media (max-width: 540px) {
+  .about-credentials { grid-template-columns: 1fr; }
+}
 .hero-particles {
   position: absolute;
   inset: -10%;
